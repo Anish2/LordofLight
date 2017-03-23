@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <link type="text/css" rel="stylesheet" href="/static/chat.css" />
+</head>
+<body>
+	<div class="menu">
+		<div class="back"><i class="fa fa-chevron-left"></i> <img draggable="false" src="/static/sage.jpg"></div>
+		<div class="name">
+			Kubera
+		</div>
+		<div class="last">
+			the ultimate, wise being
+		</div>
+	</div>
+	<div id="chats" class="chat"></div>
+	<input class="textarea" id="chatbox" placeholder="Type here!" type="text">
+	<div class="emojis"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function addToChat(message, guest) {
+            var user = "other"
+            var picture = "/static/sage.jpg"
+            if (guest) {
+                user = "self"
+                picture = "http://i.imgur.com/DY6gND0.png"
+            }
+            $("div.chat").append(
+                `<li class="`+user+`">
+                    <div class="avatar"><img draggable="false" src="`+picture+`"></div>
+                    <div class="msg">
+                        <p>`+message+`</p>
+                    </div>
+                </li>`
+            )
+            console.log($("div.chat").prop('scrollHeight'))
+            
+            //$("#chats").scrollTop(0)
+
+        }
+
+        $(document).keypress(function(e) {
+            if(e.which == 13) {
+                var message = $("#chatbox").val()
+                $("#chatbox").val('')
+                if (message) {
+                    addToChat(message, true)
+                    $.post("/chat", {message: message}, function(data) {
+                        addToChat(data, false)                        
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>
